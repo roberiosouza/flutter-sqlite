@@ -37,6 +37,30 @@ class _HomeState extends State<Home> {
     return id;
   }
 
+  _listarUsuarios() async {
+    Database db = await _recuparBanco();
+    String sql = "SELECT * FROM usuarios";
+    List usuarios = await db.rawQuery(sql);
+  }
+
+  _usuarioPorId(int id) async {
+    Database db = await _recuparBanco();
+    List usuario = await db.query("usuarios",
+        columns: ["id", "nome", "idade"], where: "id = ?", whereArgs: [id]);
+    return usuario;
+  }
+
+  _alterarUsuario(int id) async {
+    Database db = await _recuparBanco();
+    Map<String, dynamic> usuario = {"nome": "Josef", "idade": 30};
+    db.update("usuarios", usuario, where: "id = ?", whereArgs: [id]);
+  }
+
+  _deletaUsuario(int id) async {
+    Database db = await _recuparBanco();
+    db.delete("usuarios", where: "id = ?", whereArgs: [id]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
