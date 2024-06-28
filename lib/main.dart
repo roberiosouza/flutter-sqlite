@@ -20,18 +20,25 @@ class _HomeState extends State<Home> {
     final caminhoBanco = await getDatabasesPath();
     final localBanco = join(caminhoBanco, "banco.db");
 
-    var retorno =
+    var db =
         await openDatabase(localBanco, version: 1, onCreate: (db, dbVersion) {
       String sql =
           "CREATE TABLE usuarios (id INTEGER PRIMARY KEY AUTOINCREMENT, nome VARCHAR, idade INTEGER)";
       db.execute(sql);
     });
-    print("Aberto: " + retorno.isOpen.toString());
+    return db;
+  }
+
+  _salvarUsuario() async {
+    Database db = await _recuparBanco();
+    Map<String, dynamic> dadosUsuario = {"nome": "Rb", "idade": 20};
+    int id = await db.insert("usuarios", dadosUsuario);
+
+    return id;
   }
 
   @override
   Widget build(BuildContext context) {
-    _recuparBanco();
     return const Placeholder();
   }
 }
